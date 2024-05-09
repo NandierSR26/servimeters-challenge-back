@@ -1,14 +1,22 @@
 import { NextFunction, Request, Response } from "express";
 import { handleError } from "../config/handleReponses";
-import { UserModel,  } from "../models/users.model";
+import { UserModel, } from "../models/users.model";
 import { validateToken } from "../config/jwt.adapter";
 import { Document } from 'mongoose'
 
 declare global {
   namespace Express {
-      interface Request {
-          user?: Document; // Aquí puedes ajustar el tipo según lo necesites
-      }
+    interface Request {
+      user?: {
+        full_name: string;
+        email: string;
+        phone: string;
+        password: string;
+        balance: number;
+        rol: string[];
+      } | undefined;
+      uid?: string; // Aquí puedes ajustar el tipo según lo necesites
+    }
   }
 }
 
@@ -28,7 +36,7 @@ export const validateJWT = async (req: Request, res: Response, next: NextFunctio
     const user = await UserModel.findById(payload.id);
     if (!user) return handleError({ code: 401, message: 'Invalid token - user', res });
 
-    req.body.user = user;
+    req.uid = user.id;
     req.user = user;
     next();
 
