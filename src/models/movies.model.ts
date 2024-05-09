@@ -16,11 +16,13 @@ export const MoviesSchema = new Schema({
     type: String
   },
   clasification: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'Clasifications',
     required: [true, 'Clasification is required']
   },
   gender: {
-    type: String,
+    type: Schema.Types.ObjectId,
+    ref: 'Genders',
     required: [true, 'Gender is required']
   },
   duration: {
