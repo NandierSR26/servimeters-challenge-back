@@ -58,11 +58,30 @@ export class MoviesController {
   public async update(req: Request, res: Response) {
 
     try {
-      const movie = await MoviesModel.findById(req.params.id);
+      let filename;
+      const { clasification, gender, price, ...rest } = req.body;
+      let priceNumber = +price;
 
+      if(req.file?.filename) {
+        filename = req.file.filename;
+      }
+
+      const movie = await MoviesModel.findById(req.params.id);
       if (!movie) return handleError({ code: 404, message: 'movie not found', res });
 
-      const updatedMovie = await MoviesModel.findByIdAndUpdate(req.params.id, req.body, { new: true });
+      if(gender) {
+        const genderDb = await GendersModel.findById(gender);
+        if(!genderDb) handleError({ code: 404, message: 'Gender not exist', res });
+      }
+
+      if(clasification) {
+        const clasificationDb = await ClasificationsModel.findById(clasification);
+        if(!clasificationDb) handleError({ code: 404, message: 'Clasification not exist', res });
+      }
+
+      const data = {clasification, gender, price: priceNumber, poster: filename, ...rest};
+
+      const updatedMovie = await MoviesModel.findByIdAndUpdate(req.params.id, data, { new: true });
 
       return handleSuccess({ code: 200, message: 'movie found', res, data: updatedMovie });
 
