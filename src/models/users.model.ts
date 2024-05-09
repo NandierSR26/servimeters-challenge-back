@@ -21,6 +21,11 @@ export const UsersSchema = new Schema({
   balance: {
     type: Number,
     default: 0
+  },
+  rol: {
+    type: [String],
+    default: ['CLIENT'],
+    enum: ['CLIENT', 'EMPLOYEE']
   }
 });
 
