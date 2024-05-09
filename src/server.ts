@@ -1,5 +1,7 @@
+import { connectDB } from './database/db';
 import express from 'express';
 import cors from 'cors'
+import { envs } from './config/envs';
 
 
 export class Server {
@@ -11,6 +13,11 @@ export class Server {
 
     this.app = express();
     this.port = 3000;
+
+    connectDB({
+      dbName: envs.MONGO_DB_NAME,
+      mongoUrl: envs.MONGO_URL
+    }).then(() => console.log('====== Database Connected ======'))
   }
 
   middlewares() {
