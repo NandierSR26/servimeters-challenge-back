@@ -37,7 +37,9 @@ export class MoviesController {
   public async create(req: Request, res: Response) {
 
     try {
-      const { clasification, gender } = req.body;
+      const { clasification, gender, price, ...rest } = req.body;
+      const { filename } = req.file!;
+      let priceNumber = +price;
 
       const genderDb = await GendersModel.findById(gender);
       const clasificationDb = await ClasificationsModel.findById(clasification);
@@ -45,7 +47,7 @@ export class MoviesController {
       if(!genderDb) handleError({ code: 404, message: 'Gender not exist', res });
       if(!clasificationDb) handleError({ code: 404, message: 'Clasification not exist', res });
 
-      const movies = await MoviesModel.create(req.body);
+      const movies = await MoviesModel.create({clasification, gender, price: priceNumber, poster: filename, ...rest});
       return handleSuccess({ code: 200, message: 'Clasification created', res, data: movies });
 
     } catch (error) {

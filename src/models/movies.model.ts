@@ -25,6 +25,13 @@ export const MoviesSchema = new Schema({
     ref: 'Genders',
     required: [true, 'Gender is required']
   },
+  poster: {
+    type: String,
+    required: true
+  },
+  video_url: {
+    type: String
+  },
   duration: {
     type: String
   },
