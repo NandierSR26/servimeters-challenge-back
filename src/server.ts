@@ -2,6 +2,7 @@ import { connectDB } from './database/db';
 import express from 'express';
 import cors from 'cors'
 import { envs } from './config/envs';
+import router from './routes/index.routes';
 
 
 export class Server {
@@ -29,6 +30,9 @@ export class Server {
 
     // parseo del body
     this.app.use(express.json());
+
+    // API routes
+    this.app.use( router )
 
   }
 

@@ -9,11 +9,11 @@ export class AuthController {
   constructor() { }
 
   public async login(req: Request, res: Response) {
-    const { username, password } = req.body;
+    const { email, password } = req.body;
 
     try {
 
-      const user = await UserModel.findOne({ username });
+      const user = await UserModel.findOne({ email });
       if (!user) return handleError({ code: 404, message: 'This username not exist', res });
 
       const isMatch = bcryptAdapter.compare(password, user!.password);
@@ -30,6 +30,7 @@ export class AuthController {
   }
 
   public async register(req: Request, res: Response) {
+
     try {
       const user = await UserModel.create(req.body);
 
