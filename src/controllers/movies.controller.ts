@@ -19,6 +19,33 @@ export class MoviesController {
 
   }
 
+  public async searchMovies(req: Request, res: Response) {
+
+    const { name, director, gender, clasification, year } = req.query;
+    const query: any = {};
+
+    if (name) {
+      query.name = name;
+    }
+    if (director) {
+      query.director = director;
+    }
+
+    if (gender) {
+      query.gender = gender;
+    }
+    if (year) {
+      query.year = year;
+    }
+    if (clasification) {
+      query.clasification = clasification;
+    }
+
+    const movies = await MoviesModel.find(query);
+    return handleSuccess({ code: 200, message: "Ready search results", res, data: movies });
+
+  }
+
   public async getByID(req: Request, res: Response) {
     try {
       const movie = await MoviesModel.findById(req.params.id)
@@ -44,10 +71,10 @@ export class MoviesController {
       const genderDb = await GendersModel.findById(gender);
       const clasificationDb = await ClasificationsModel.findById(clasification);
 
-      if(!genderDb) handleError({ code: 404, message: 'Gender not exist', res });
-      if(!clasificationDb) handleError({ code: 404, message: 'Clasification not exist', res });
+      if (!genderDb) handleError({ code: 404, message: 'Gender not exist', res });
+      if (!clasificationDb) handleError({ code: 404, message: 'Clasification not exist', res });
 
-      const movies = await MoviesModel.create({clasification, gender, price: priceNumber, poster: filename, ...rest});
+      const movies = await MoviesModel.create({ clasification, gender, price: priceNumber, poster: filename, ...rest });
       return handleSuccess({ code: 200, message: 'Clasification created', res, data: movies });
 
     } catch (error) {
@@ -62,24 +89,24 @@ export class MoviesController {
       const { clasification, gender, price, ...rest } = req.body;
       let priceNumber = +price;
 
-      if(req.file?.filename) {
+      if (req.file?.filename) {
         filename = req.file.filename;
       }
 
       const movie = await MoviesModel.findById(req.params.id);
       if (!movie) return handleError({ code: 404, message: 'movie not found', res });
 
-      if(gender) {
+      if (gender) {
         const genderDb = await GendersModel.findById(gender);
-        if(!genderDb) handleError({ code: 404, message: 'Gender not exist', res });
+        if (!genderDb) handleError({ code: 404, message: 'Gender not exist', res });
       }
 
-      if(clasification) {
+      if (clasification) {
         const clasificationDb = await ClasificationsModel.findById(clasification);
-        if(!clasificationDb) handleError({ code: 404, message: 'Clasification not exist', res });
+        if (!clasificationDb) handleError({ code: 404, message: 'Clasification not exist', res });
       }
 
-      const data = {clasification, gender, price: priceNumber, poster: filename, ...rest};
+      const data = { clasification, gender, price: priceNumber, poster: filename, ...rest };
 
       const updatedMovie = await MoviesModel.findByIdAndUpdate(req.params.id, data, { new: true });
 

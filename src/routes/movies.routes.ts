@@ -8,6 +8,7 @@ export const moviesRouter = Router();
 const moviesController = new MoviesController();
 
 moviesRouter.get('/', moviesController.getAll);
+moviesRouter.get('/search', moviesController.searchMovies);
 moviesRouter.get('/:id', moviesController.getByID);
 moviesRouter.post('/create', [ upload.single('poster'), validateEmployeRol ], moviesController.create);
 moviesRouter.patch('/update/:id', [ upload.single('poster'), validateEmployeRol ], moviesController.update);
