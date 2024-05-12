@@ -2,21 +2,8 @@ import { Request, Response } from "express";
 import { MoviesModel } from "../models/movies.model";
 import { handleError, handleSuccess } from "../config/handleReponses";
 import { RentalsModel } from "../models/rentals.model";
-import { differenceInDays, startOfDay } from "date-fns";
 
 export class RentalsController {
-
-  private calculateDiffDays(start: Date, end: Date) {
-    console.log({ start, end })
-
-
-    const dayMiliseconds = 24 * 60 * 60 * 1000;
-
-    const diffMiliseconds = Math.abs(start.getTime() - end.getTime());
-    const diffDays = Math.round(diffMiliseconds / dayMiliseconds);
-    return diffDays;
-
-  }
 
   public async getAll(req: Request, res: Response) {
 
